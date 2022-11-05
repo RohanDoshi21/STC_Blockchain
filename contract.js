@@ -1,18 +1,18 @@
 class EnergyExchangeContract {
-    prosumer(address, EnergyOffer, Wallet)
-    consumer(address, EnergyRequest, BidPrice, Wallet)
-    LocalEnergyTransfer(prosumer, consumer){
-        if (prosumer.EnergyOffer > consumer.EnergyRequest){
-            BalanceLocalEnergy = (consumer.BidPrice*consumer.EnergyRequest)
-            prosumer.EnergyOffer -= consumer.EnergyRequest;
-            consumer.EnergyRequest = 0;
+    seller(address, EnergyOffer, Wallet)
+    buyer(address, EnergyRequest, BidPrice, Wallet)
+    EnergyTransfer(seller, buyer){
+        if (seller.EnergyOffer > buyer.EnergyRequest){
+            BalanceLocalEnergy = (buyer.BidPrice*buyer.EnergyRequest)
+            seller.EnergyOffer -= buyer.EnergyRequest;
+            buyer.EnergyRequest = 0;
         }
         else {
-            BalanceLocalEnergy = (consumer.BidPrice*prosumer.EnergyOffer);
-            consumer.EnergyRequest -= prosumer.EnergyOffer;
-            prosumer.EnergyOffer = 0;
+            BalanceLocalEnergy = (buyer.BidPrice*seller.EnergyOffer);
+            buyer.EnergyRequest -= seller.EnergyOffer;
+            seller.EnergyOffer = 0;
         }
-        prosumer.Wallet += BalanceLocalEnergy;
-        consumer.Wallet -= BalanceLocalEnergy;
+        seller.Wallet += BalanceLocalEnergy;
+        buyer.Wallet -= BalanceLocalEnergy;
     }
 };
