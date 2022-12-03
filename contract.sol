@@ -1,5 +1,6 @@
 pragma solidity ^0.4.17;
 
+// Converting all the values from wei to ether
 contract EnergyExchange {
     address[] public sellerAddress;
     address[] public buyerAddress;
@@ -25,7 +26,7 @@ contract EnergyExchange {
     }
 
     function AddBuyer(uint buyerBidPrice, uint EnergyRequest) public payable {
-        require(msg.value > 0.01 ether);
+        require(msg.value > buyerBidPrice*EnergyRequest*1000000000000000000);
         buyerAddress.push(msg.sender);
         BuyerList[msg.sender].BidPrice = buyerBidPrice;
         BuyerList[msg.sender].Wallet = msg.value;
@@ -63,13 +64,18 @@ contract EnergyExchange {
             SellerList[seller].EnergyOffer = 0;
         }
 
-        SellerList[seller].Wallet += BalanceLocalEnergy;
-        BuyerList[buyer].Wallet -= BalanceLocalEnergy;
+        SellerList[seller].Wallet += BalanceLocalEnergy*1000000000000000000;
+        BuyerList[buyer].Wallet -= BalanceLocalEnergy*1000000000000000000;
     }
 
     function CheckoutSeller() public payable {
         msg.sender.transfer(SellerList[msg.sender].Wallet);
         SellerList[msg.sender].Wallet = 0;
+    }
+
+    function CheckoutBuyer() public payable {
+        msg.sender.transfer(BuyerList[msg.sender].Wallet);
+        BuyerList[msg.sender].Wallet = 0;
     }
 
 }
